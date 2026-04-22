@@ -27,13 +27,41 @@ public class Ball extends Actor{
 			dx *= -1;
 		}
 		// Up & Down Bounce Off
-		if (getY() <= 0 || getY() + getHeight() >= getWorld().getHeight()) {
+		if (getY() <= 0) {
 			dy *= -1;
+		}
+		if (getY() + getHeight() >= getWorld().getHeight()) {
+			dy *= -1;
+			BallWorld world = (BallWorld) getWorld();
+		    world.getScore().setValue(world.getScore().getValue() - 1000);
 		}
 		
 		Paddle paddle = getOneIntersectingObject(Paddle.class);
 	    if (paddle != null) {
 	        dy *= -1;
+	    }
+	    
+	    Brick brick = getOneIntersectingObject(Brick.class);
+	    
+	    
+	    if (brick != null  && getWorld().getChildren().contains(brick)) {
+	    	BallWorld world = (BallWorld) getWorld();
+	        world.getScore().setValue(world.getScore().getValue() + 100);
+	    	
+	    	
+	        if (getX() >= brick.getX() &&
+	            getX() <= brick.getX() + brick.getWidth()) {
+
+	            dy *= -1;
+	        } else if (getY() >= brick.getY() &&
+	                 getY() <= brick.getY() + brick.getHeight()) {
+
+	            dx *= -1;
+	        } else {
+	            dx *= -1;
+	            dy *= -1;
+	        }
+	        getWorld().remove(brick);
 	    }
 	}
 }

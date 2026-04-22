@@ -8,6 +8,7 @@ public class BallWorld extends World{
 	
 	private Paddle paddle;
     private Ball ball;
+    private Score score;
 	
 	public BallWorld() {
 		setPrefSize(800, 600);
@@ -30,8 +31,22 @@ public class BallWorld extends World{
 			public void handle(MouseEvent event) {
 				paddle.setX(event.getX() - paddle.getWidth() / 2);
 			}});
+		
+		//Test Brick Logic
+		/*Brick brick = new Brick();
+		add(brick);
+		brick.setX(getWidth() / 2);
+		brick.setY(100);*/
+		
+		score = new Score();
+        score.setX(getWidth() / 12);
+        score.setY(getHeight() / 10);
+        getChildren().add(score);
+    }
 
-	}
+    public Score getScore() {
+        return score;
+    }
 
 	@Override
 	public void act(long now) {

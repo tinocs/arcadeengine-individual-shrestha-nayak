@@ -17,11 +17,18 @@ public class Paddle extends Actor{
 	@Override
 	public void act(long now) {
 		if (getWorld().isKeyPressed(KeyCode.LEFT)) {
-			move(-10, 0);
-		}
-		if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
-			move(10, 0);
-		}
+	        move(-10, 0);
+	    }
+	    if (getWorld().isKeyPressed(KeyCode.RIGHT)) {
+	        move(10, 0);
+	    }
+
+	    if (getX() < 0) {
+	        setX(0);
+	    }
+	    if (getX() + getWidth() > getWorld().getWidth()) {
+	        setX(getWorld().getWidth() - getWidth());
+	    }
 	}
 	
 }
