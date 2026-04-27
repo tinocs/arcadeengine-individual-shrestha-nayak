@@ -26,14 +26,30 @@ public class Ball extends Actor{
 		if (getX() <= 0 || getX() + getWidth() >= getWorld().getWidth()) {
 			dx *= -1;
 		}
-		// Up & Down Bounce Off
+		// Top Bounce Off
 		if (getY() <= 0) {
 			dy *= -1;
 		}
+		
+		// Bottom Bounce Off
 		if (getY() + getHeight() >= getWorld().getHeight()) {
-			dy *= -1;
-			BallWorld world = (BallWorld) getWorld();
-		    world.getScore().setValue(world.getScore().getValue() - 1000);
+
+		    BallWorld world = (BallWorld) getWorld();
+
+		    // lose life
+		    world.getLives().setValue(world.getLives().getValue() - 1);
+
+		    // reset ball position
+		    setX(world.getWidth() / 2);
+		    setY(world.getHeight() / 2);
+
+		    dy *= -1;
+
+		    // game over
+		    if (world.getLives().getValue() <= 0) {
+		        world.stop();
+		        Breakout.showTitleScreen();
+		    }
 		}
 		
 		Paddle paddle = getOneIntersectingObject(Paddle.class);

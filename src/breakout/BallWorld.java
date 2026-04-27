@@ -13,6 +13,7 @@ public class BallWorld extends World {
     private Ball ball;
     private Score score;
     private int level;
+    private Lives lives;
 
     public BallWorld() {
         setPrefSize(800, 600);
@@ -42,6 +43,11 @@ public class BallWorld extends World {
         score.setX(getWidth() / 12);
         score.setY(getHeight() / 10);
         getChildren().add(score);
+        
+        lives = new Lives();
+        lives.setX(getWidth() / 12);
+        lives.setY(getHeight() / 10 + 30);
+        getChildren().add(lives);
 
         loadLevel(level);
     }
@@ -83,6 +89,10 @@ public class BallWorld extends World {
 
     public Score getScore() {
         return score;
+    }
+    
+    public Lives getLives() {
+        return lives;
     }
 
     @Override
