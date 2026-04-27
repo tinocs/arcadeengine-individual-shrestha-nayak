@@ -8,7 +8,7 @@ public class Lives extends Text{
 
     public Lives() {
         value = 3;
-        setFont(new Font(24));
+        setFont(new Font("Verdana", 24));
         updateDisplay();
     }
 

@@ -5,15 +5,23 @@ import javafx.scene.image.Image;
 
 public class Brick extends Actor {
 
-    public Brick() {
-        String path = getClass().getClassLoader()
-                .getResource("breakoutresources/brick.png")
-                .toString();
+	private boolean isHit = false;
 
-        setImage(new Image(path));
-    }
+	public Brick() {
+		String path = getClass().getClassLoader().getResource("breakoutresources/brick.png").toString();
 
-    @Override
-    public void act(long now) {
-    }
+		setImage(new Image(path));
+	}
+
+	public boolean isHit() {
+		return isHit;
+	}
+
+	public void setHit(boolean hit) {
+		isHit = hit;
+	}
+
+	@Override
+	public void act(long now) {
+	}
 }

@@ -7,6 +7,9 @@ import engine.Sound;
 import engine.World;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.input.KeyCode;
 
 public class BallWorld extends World {
 
@@ -14,8 +17,10 @@ public class BallWorld extends World {
     private Ball ball;
     private Score score;
     private Lives lives;
+    private Text message;
     private int level;
     private boolean isPaused;
+    private boolean isGameOver;
     private Sound gameLost = new Sound("breakoutresources/game_lost.wav");
     private Sound gameWon = new Sound("breakoutresources/game_won.wav");
 
@@ -23,6 +28,7 @@ public class BallWorld extends World {
         setPrefSize(800, 600);
         level = 1;
         isPaused = true;
+        isGameOver = false;
     }
 
     @Override
@@ -40,6 +46,12 @@ public class BallWorld extends World {
             @Override
             public void handle(MouseEvent event) {
                 paddle.setX(event.getX() - paddle.getWidth() / 2);
+            }
+        });
+        
+        setOnMousePressed(e -> {
+            if (isGameOver) {
+                Breakout.showTitleScreen();
             }
         });
 
@@ -76,7 +88,10 @@ public class BallWorld extends World {
         Brick sample = new Brick();
         double brickWidth = sample.getImage().getWidth();
         double brickHeight = sample.getImage().getHeight();
-
+        
+        double totalWidth = cols * brickWidth;
+        double startX = (getWidth() - totalWidth) / 2;
+        
         for (int r = 0; r < rows; r++) {
             String line = scanner.nextLine();
 
@@ -84,13 +99,25 @@ public class BallWorld extends World {
                 if (line.charAt(c) != '0') {
                     Brick brick = new Brick();
                     add(brick);
-                    brick.setX(c * brickWidth + 90);
+                    brick.setX(c * brickWidth + startX);
                     brick.setY(r * brickHeight + 100);
                 }
             }
         }
         
         scanner.close();
+    }
+    
+    private void showEndMessage(String text) {
+        isPaused = true;
+        isGameOver = true;
+
+        message = new Text(text);
+        message.setFont(new Font("Impact", 40));
+        message.setX(getWidth() / 2 - message.getFont().getSize() * text.length() / 4);
+        message.setY(getHeight() / 2);
+
+        getChildren().add(message);
     }
 
     public Score getScore() {
@@ -116,18 +143,18 @@ public class BallWorld extends World {
 
     @Override
     public void act(long now) {
-    	if (isKeyPressed(javafx.scene.input.KeyCode.SPACE) && isPaused) {
+    	if (!isGameOver && isKeyPressed(KeyCode.SPACE) && isPaused) {
             isPaused = false;
         }
     	
-    	if (getObjects(Brick.class).isEmpty()) {
+    	if (!isGameOver && lives.getValue() <= 0) {
+            gameLost.play();
+            showEndMessage("GAME OVER");
+            return;
+        }
+    	
+    	if (!isGameOver && getObjects(Brick.class).isEmpty()) {
             level++;
-
-            if (lives.getValue() <= 0) {
-                gameLost.play();
-                stop();
-                Breakout.showTitleScreen();
-            }
             
             if (level <= 2) {
                 loadLevel(level);
@@ -135,9 +162,13 @@ public class BallWorld extends World {
                 isPaused = true;
             } else {
             	gameWon.play();
-            	stop();
-                Breakout.showTitleScreen();
+            	showEndMessage("YOU WIN!");
+            	return;
             }
+        }
+    	
+    	if (isGameOver && isKeyPressed(KeyCode.SPACE)) {
+            Breakout.showTitleScreen();
         }
     }
 }

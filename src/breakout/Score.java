@@ -9,12 +9,12 @@ public class Score extends Text {
 
     public Score() {
         value = 0;
-        setFont(new Font(24));
+        setFont(new Font("Verdana", 24));
         updateDisplay();
     }
 
     public void updateDisplay() {
-        setText(String.valueOf(value));
+        setText("Score: " + String.valueOf(value));
     }
 
     public int getValue() {

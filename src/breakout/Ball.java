@@ -32,7 +32,7 @@ public class Ball extends Actor{
 		BallWorld world = (BallWorld) getWorld();
 		if (world == null) return;
 		if (world.isPaused()) return;
-		
+	
 		move(dx, dy);
 		// Left & Right Bounce Off
 		if (getX() <= 0 || getX() + getWidth() >= getWorld().getWidth()) {
@@ -66,17 +66,14 @@ public class Ball extends Actor{
 	    Brick brick = getOneIntersectingObject(Brick.class);
 	    
 	    
-	    if (brick != null  && getWorld().getChildren().contains(brick)) {
-	        world.getScore().setValue(world.getScore().getValue() + 100);
+	    if (brick != null  && getWorld().getChildren().contains(brick) && !brick.isHit()) {
+	    	brick.setHit(true);
+	    	world.getScore().setValue(world.getScore().getValue() + 100);
 	        brickSound.play();
 	    	
-	        if (getX() >= brick.getX() &&
-	            getX() <= brick.getX() + brick.getWidth()) {
-
+	        if (getX() >= brick.getX() && getX() <= brick.getX() + brick.getWidth()) {
 	            dy *= -1;
-	        } else if (getY() >= brick.getY() &&
-	                 getY() <= brick.getY() + brick.getHeight()) {
-
+	        } else if (getY() >= brick.getY() && getY() <= brick.getY() + brick.getHeight()) {
 	            dx *= -1;
 	        } else {
 	            dx *= -1;
@@ -88,12 +85,7 @@ public class Ball extends Actor{
 	        fade.setFromValue(1.0);
 	        fade.setToValue(0.0);
 
-	        fade.setOnFinished(new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent e) {
-	                getWorld().remove(brick);
-	            }
-	        });
+	        fade.setOnFinished(e -> getWorld().remove(brick));
 
 	        fade.play();
 	    }

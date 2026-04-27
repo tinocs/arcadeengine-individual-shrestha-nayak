@@ -28,7 +28,7 @@ public class Breakout extends Application{
 
     public static void showTitleScreen() {
         Text title = new Text("Breakout");
-        title.setFont(new Font(48));
+        title.setFont(new Font("Impact", 48));
 
         Button playButton = new Button("Play");
         playButton.setOnAction(e -> {
