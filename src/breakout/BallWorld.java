@@ -12,26 +12,27 @@ public class BallWorld extends World {
     private Paddle paddle;
     private Ball ball;
     private Score score;
-    private int level;
     private Lives lives;
+    private int level;
+    private boolean isPaused;
 
     public BallWorld() {
         setPrefSize(800, 600);
         level = 1;
+        isPaused = true;
     }
 
     @Override
     public void onDimensionsInitialized() {
         ball = new Ball();
         add(ball);
-        ball.setX(getWidth() / 2);
-        ball.setY(getHeight() / 2);
 
         paddle = new Paddle();
         add(paddle);
         paddle.setX(getWidth() / 2);
         paddle.setY(3 * getHeight() / 4);
 
+        
         setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -50,6 +51,8 @@ public class BallWorld extends World {
         getChildren().add(lives);
 
         loadLevel(level);
+        resetBall();
+        isPaused = true;
     }
 
     public void loadLevel(int level) {
@@ -83,7 +86,7 @@ public class BallWorld extends World {
                 }
             }
         }
-
+        
         scanner.close();
     }
 
@@ -94,14 +97,33 @@ public class BallWorld extends World {
     public Lives getLives() {
         return lives;
     }
+    
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+    
+    public void resetBall() {
+    	ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
+    	ball.setY(paddle.getY() - ball.getHeight());
+    }
 
     @Override
     public void act(long now) {
-        if (getObjects(Brick.class).isEmpty()) {
+    	if (isKeyPressed(javafx.scene.input.KeyCode.SPACE) && isPaused) {
+            isPaused = false;
+        }
+    	
+    	if (getObjects(Brick.class).isEmpty()) {
             level++;
 
             if (level <= 2) {
                 loadLevel(level);
+                resetBall();
+                isPaused = true;
             } else {
                 stop();
                 Breakout.showTitleScreen();

@@ -21,6 +21,10 @@ public class Ball extends Actor{
 
 	@Override
 	public void act(long now) {
+		BallWorld world = (BallWorld) getWorld();
+		if (world == null) return;
+		if (world.isPaused()) return;
+		
 		move(dx, dy);
 		// Left & Right Bounce Off
 		if (getX() <= 0 || getX() + getWidth() >= getWorld().getWidth()) {
@@ -34,16 +38,11 @@ public class Ball extends Actor{
 		// Bottom Bounce Off
 		if (getY() + getHeight() >= getWorld().getHeight()) {
 
-		    BallWorld world = (BallWorld) getWorld();
-
 		    // lose life
 		    world.getLives().setValue(world.getLives().getValue() - 1);
 
-		    // reset ball position
-		    setX(world.getWidth() / 2);
-		    setY(world.getHeight() / 2);
-
-		    dy *= -1;
+		    world.setPaused(true);
+		    world.resetBall();
 
 		    // game over
 		    if (world.getLives().getValue() <= 0) {
@@ -61,7 +60,6 @@ public class Ball extends Actor{
 	    
 	    
 	    if (brick != null  && getWorld().getChildren().contains(brick)) {
-	    	BallWorld world = (BallWorld) getWorld();
 	        world.getScore().setValue(world.getScore().getValue() + 100);
 	    	
 	    	
