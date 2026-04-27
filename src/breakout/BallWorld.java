@@ -3,6 +3,7 @@ package breakout;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import engine.Sound;
 import engine.World;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +16,8 @@ public class BallWorld extends World {
     private Lives lives;
     private int level;
     private boolean isPaused;
+    private Sound gameLost = new Sound("breakoutresources/game_lost.wav");
+    private Sound gameWon = new Sound("breakoutresources/game_won.wav");
 
     public BallWorld() {
         setPrefSize(800, 600);
@@ -120,12 +123,19 @@ public class BallWorld extends World {
     	if (getObjects(Brick.class).isEmpty()) {
             level++;
 
+            if (lives.getValue() <= 0) {
+                gameLost.play();
+                stop();
+                Breakout.showTitleScreen();
+            }
+            
             if (level <= 2) {
                 loadLevel(level);
                 resetBall();
                 isPaused = true;
             } else {
-                stop();
+            	gameWon.play();
+            	stop();
                 Breakout.showTitleScreen();
             }
         }
