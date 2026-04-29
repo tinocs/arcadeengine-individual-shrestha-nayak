@@ -4,8 +4,8 @@ import engine.Actor;
 import javafx.scene.image.Image;
 
 public class Brick extends Actor {
-
-	private boolean isHit = false;
+	// to help with score double counting blocks before they fully disappear
+	private boolean isHit = false; 
 
 	public Brick() {
 		String path = getClass().getClassLoader().getResource("breakoutresources/brick.png").toString();

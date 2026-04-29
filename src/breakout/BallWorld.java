@@ -3,12 +3,15 @@ package breakout;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import engine.Actor;
 import engine.Sound;
 import engine.World;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 
 public class BallWorld extends World {
@@ -21,6 +24,7 @@ public class BallWorld extends World {
     private int level;
     private boolean isPaused;
     private boolean isGameOver;
+    private ImageView bg;
     private Sound gameLost = new Sound("breakoutresources/game_lost.wav");
     private Sound gameWon = new Sound("breakoutresources/game_won.wav");
 
@@ -29,11 +33,15 @@ public class BallWorld extends World {
         level = 1;
         isPaused = true;
         isGameOver = false;
+        Image background = new Image("breakoutresources/background.png");
+        bg = new ImageView(background);
+        getChildren().add(bg);
     }
 
     @Override
     public void onDimensionsInitialized() {
-        ball = new Ball();
+    	bg.setX((getWidth() - bg.getImage().getWidth()) / 2);
+    	ball = new Ball();
         add(ball);
 
         paddle = new Paddle();
@@ -69,6 +77,22 @@ public class BallWorld extends World {
         resetBall();
         isPaused = true;
     }
+    
+    public void scroll(double dx) {
+    	double newX = bg.getX() - dx;
+
+        double leftLimit = getWidth() - bg.getImage().getWidth();
+        double rightLimit = 0;
+
+        if (newX >= leftLimit && newX <= rightLimit) {
+            bg.setX(newX);
+
+            for (Actor actor : getObjects(Actor.class)) {
+                actor.move(-dx, 0);
+            }
+        }
+    }
+
 
     public void loadLevel(int level) {
         String fileName = "breakoutresources/level" + level + ".txt";
