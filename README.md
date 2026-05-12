@@ -10,9 +10,7 @@
 
 ## Game Proposal ##
 
-Write a paragraph here describing the game you want to make.  Describe how it is played and which features
-you want to include in your game.  Remember, any simple game can be scaled up with features and any complex
-game can be scaled down.
+I want to make an extended breakout game with extra features, specifically focusing on block types that make the game more interactive.
 
 **Game Controls:**
 
