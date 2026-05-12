@@ -25,7 +25,7 @@ game can be scaled down.
 + A Ball moving around the screen to hit blocks
 + A Paddle that hits ball to control where to move it
 + Different Types of Bricks to hit (or not):
-	+ *Should Hit*
+  + *Should Hit*
     + Power Ups
     + Multi-Hit Blocks
     + Bomb Blocks that destroy blocks around it
